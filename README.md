@@ -10,5 +10,8 @@
 
 <br/>
 
-<p align="center"><b>关于订阅</b></p> <br>
-<p align="center">收藏请star 订阅请watch</p>
+<p align="center"><b>关于订阅：</b> 收藏请点击<strong>star</strong> && 订阅请点击<strong>watch</strong></p> <br>
+
+<p align="center">
+<a href="https://v4if.github.io/archives/"><b>一些旧文章</b></a>
+</p>
