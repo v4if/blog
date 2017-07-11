@@ -1,0 +1,574 @@
+title: 程序员能给女朋友做什么特别浪漫的礼物？
+date: 2016-09-01 08:49:08
+tags: [程序员,礼物,MapBox,Parser]
+toc: true
+---
+Web版我和她的足迹地图 
+上线地址： [v4if.github.io/mapbox](https://v4if.github.io/mapbox)
+GitHub代码仓库地址： [github.com/v4if/mapbox](https://github.com/v4if/mapbox)
+应用部署效果图：
+![forbunny](2016-09-08-172406.png)
+
+## 绪
+灵感来自于知乎的一个回答 [@Tony Xu](https://www.zhihu.com/question/37804443/answer/119500268)
+![ForBunny](forbunny.png)
+
+然后开始着手准备，不定时更新中 . . .
+> * 1、基于Web Map的API，在去过的城市上面标注足迹，城市之间连线；左侧可以留一部分显示在一起的时间统计
+> * 2、将城市和城市之间的连线做一个listConfig，即相当于数据配置文件，便于更新维护，自己手撸一个简单的parser，去解析城市listNode和城市之间的连线listLine
+
+## Web Map
+一开始想使用Google Map，但是注册不到Google Maps JavaScript API的Key，凭据页面一直在刷新却永远出不来，可能是由于中国的大防火墙，然后转向了MapBox
+[mapbox.js](https://www.mapbox.com/mapbox.js/api/v2.4.0/) MapBox的JS库
+学习mapbox还是比较简单的，参考下面的几个tutorial做下来，基本概念都差不多了
+[Using Mapbox Editor](https://www.mapbox.com/help/using-mapbox-editor/)
+[Build a web app](https://www.mapbox.com/help/#build-a-web-app)
+[Build a store locator using Mapbox GL JS](https://www.mapbox.com/help/building-a-store-locator/)
+主要明确两个概念：tiles和layers就可以了，即map的基本组成元素tiles，由最初的z0开始，^4四次方指数化增长，让你明白最终呈现给用户的map是由一个一个小的tiles拼接而成的，有时候网速不好的时候，会发现map的方格会有错位的现象。layers是map上面的图层，用于显示位置等信息。
+地图加载出来之后最主要的工作就是需要添加图层数据，数据的获得推荐使用MapBox的在线图形化工具 [MapBox Editor](https://www.mapbox.com/editor/)
+可以将编辑好的图层Features数据以GeoJSON的格式导出，包括你创建的marker、marker的经纬度，还是非常方便的，我是在chrome下导出的，导出的数据比较龊
+![forbunny](2016-09-08-101959.png)
+然后用chrome的插件JSONView格式化之后，又手动在Sublime Text里面修改的
+![forbunny](2016-09-08-102051.png)
+可以将导出的数据`L.mapbox.featureLayer(geojson).addTo(map);`添加到map上，现在我们的map应该已经是这样的了
+![forbunny](2016-09-08-102823.png)
+会发现多了好多白色的marker，接下来就是要将我们前面导出的GeoJSON数据解析出来添加maker的城市，对这个城市的描述，marker的类型和marker的地理坐标，然后在map的左侧做一个城市的列表导航，当点击某个城市的时候会将map的中心设置为该城市，并弹出对该城市添加的描述信息。
+## Data Parser
+这部分是对上一步导出的GeoJSON数据进行解析，如果说整个Web应用的核心是MapBox，则这一部分是整个Web应用工作量最大的一部分，需要将导出的geojson.js按照字符读取解析我们需要的marker数据
+
+### XHR
+解析的第一步是我们必须先读取到`geojson.js`数据文件，但是JavaScript出于安全考虑，在某种程度上限制了对本地文件的读取，读不到数据文件的话，谈何解析。
+然后发现了一种出奇制胜的方法，利用Ajax技术的XMLHttpRequest去异步请求`geojson.js`文件，只能说世界真奇妙，将本来用于实现异步通讯，提高用户体验度的Ajax技术去异步请求获取本地数据文件的内容，其实想一想这两者的本质相同，都是从服务器拉取文件。
+```JavaScript
+function getInstanceOfXHR() {
+	var xhr;
+	try {xhr = new XMLHttpRequest();}
+	catch(e) {
+		var IEXHRVers =["Msxml3.XMLHTTP","Msxml2.XMLHTTP","Microsoft.XMLHTTP"];
+		for (var i=0,len=IEXHRVers.length;i< len;i++) {
+			try {xhr = new ActiveXObject(IEXHRVers[i]);}
+			catch(e) {continue;}
+		}
+	}
+	return xhr;
+}
+function xhrRequest() {
+	var xhr = getInstanceOfXHR();
+	xhr.onload = function () {            
+	  parserGeoJSON(xhr.responseText);
+	};
+	try {
+	  xhr.open("get", "http://od4lcpo9k.bkt.clouddn.com/mapbox_geojson.js", true);
+	  xhr.send();
+	}
+	catch (ex) {
+	  console.log(ex.message);
+	}
+}
+```
+### Parser
+这一步虽是重中之重，但就是一般解析器的流程，首先获取token，然后根据数据的格式进行parser，直接看代码就好了。
+这里用到了一个向前的预判，判断什么时候结束Features的解析流程，function lookForwardFor(left, right)，向前查找，判断结束条件 left先于right找到为期望结果，返回0，即如果是left传入的token.type先于right传入的token.type找到的话则继续解析，否则解析结束。代码中所有的判断函数都是以期望获得的条件返回0，否则返回-1
+```JavaScript
+// For Parser
+var parserNodes = [];
+var geoText = "";
+var index = -1;
+var currentChar = "";
+var token = "";
+var tokenType = {
+	Integer: 'Integer',
+	Word: 'Word',
+	LParen: 'LParen',				//大括号 {}
+	RParen: 'RParen',
+	Q_LParen: 'Q_LParen',
+	Q_RParen: 'Q_RParen',		//方括号	[]
+	Equal: 'Equal',					//=
+	Quotes: 'Quotes',       //""
+	Colon: 'Colon',         //:
+	Comma: 'Comma',         //,
+	CLRF: 'CLRF', 					//换行
+	TAB: 'TAB',  						//TAB
+	Strip: 'Strip',					//-
+	ZHcn: 'ZHcn',						//汉字
+	EOF: 'EOF',							//文件结束	
+	NONE: 'NONE'						//类型不识别
+};
+// 解析
+function parserGeoJSON(json) {
+	geoText = json;
+	if (isEmpty(geoText) != 0) {
+		return;
+	}
+	// console.log(geoText);
+
+	advance();
+	token = nextToken();
+	while(token.type != tokenType.EOF) {
+		if (token.value == 'FeatureCollection') {
+			parserFeature();
+			break;
+		}
+		token = nextToken();
+	}
+
+	dump(parserNodes);
+
+	buildLocationList(parserNodes);
+}
+// 按照格式解析类型
+function eat(what, type, value) {
+	if (what == 0) {
+		// by Type
+		while(token.type != tokenType.EOF) {
+			
+			if (token.type == type) {
+				return 0;
+			}
+			token = nextToken();
+		}
+	} else if (what == 1) {
+		// by Value
+		while(token.type != tokenType.EOF) {
+			
+			if (token.value == value) {
+				return 0;
+			}
+			token = nextToken();
+		}
+	}
+	
+	error();
+}
+// 读取解析的数据值
+function getParserValue() {
+	var result = [];
+
+	eat(0, tokenType.Quotes);
+	eat(0, tokenType.Colon);
+	eat(0, tokenType.Quotes);
+
+	// get value
+	token = nextToken();
+	while(token.type != tokenType.EOF) {
+		if (token.type == tokenType.Quotes) {
+			break;
+		}
+		result.push(token.value);
+		token = nextToken();
+	}
+
+	return result.join("");
+}
+function getParserInteger() {
+	eat(0, tokenType.Integer);
+	return token.value;
+}
+// 获得解析数据的实例
+function getInstanceOfParserNode(title, details, desc, type, coordinate) {
+	this.title = title;
+	this.details = details;
+	this.desc = desc;
+	this.type = type;
+	this.coordinate = coordinate;
+}
+// dump parserNodes
+function dump(obj) {
+    var out = '';
+    for (var i in obj) {
+        if (obj[i]['type'] == 'Point') {
+        	out += i + ": " + "[ title: " + obj[i]['title'] + " , details: " + obj[i]['details'] + " , desc: " + obj[i]['desc'] + " , type: " + obj[i]['type'] + " coordinate:[" + obj[i]['coordinate'].lng + ", " + obj[i]['coordinate'].lat + "] ]" + "\n";
+        } else if (obj[i]['type'] == 'LineString') {
+        	out += i + ": " + "[ title: " + obj[i]['title'] + " , desc: " + obj[i]['desc'] + " , type: " + obj[i]['type'] + " ]" + "\n";
+        }
+    }
+    console.log(out);
+
+    // var pre = document.createElement('pre');
+    // pre.innerHTML = out;
+    // document.body.appendChild(pre);
+}
+// lookForward 向前查找，判断结束条件 left先于right找到为期望结果
+function lookForwardFor(left, right) {
+	// 如果 ] 先于 { 找到，则意味着解析结束，返回值-1
+	token = nextToken();
+	while(token.type != tokenType.EOF && token.type != left && token.type != right) {
+		token = nextToken();
+	}
+
+	if (token.type == tokenType.EOF) {
+		return -1;
+	} else if (token.type == left) {
+		// 指针回退，继续解析
+		if (index >= 0) {
+			index = index -1;
+		} else {
+			index = -1;
+		}
+		return 0;
+	} else if (token.type == right) {
+		return -1;
+	}
+}
+// 解析地图的Feature Layer数据
+function parserFeature() {
+	var i = 0;
+	token = nextToken();
+	while(token.type != tokenType.EOF) {
+		if (token.value == 'features') {
+			eat(0, tokenType.Q_LParen);
+			while(token.type != tokenType.EOF) {
+				eat(0, tokenType.LParen);
+
+				eat(1, null, 'type');
+				eat(1, null, 'Feature');
+
+				{
+					// parser for properties
+					eat(1, null, 'properties');
+					eat(0, tokenType.LParen);
+					eat(1, null, 'title');
+					var title = getParserValue();
+					eat(1, null, 'details');
+					var details = getParserValue();
+					eat(1, null, 'description');
+					var desc = getParserValue();
+					eat(0, tokenType.RParen);
+				}
+
+				{
+					// parser for geometry
+					eat(1, null, 'geometry');
+					eat(0, tokenType.LParen);
+
+					// parser for coordinates
+					eat(0, tokenType.Q_LParen);
+					var coordinate = {};
+					if (lookForwardFor(tokenType.Integer, tokenType.Q_LParen) == 0) {
+						var lng = getParserInteger();
+						eat(0, tokenType.Comma);
+						var lat = getParserInteger();
+						coordinate = {
+							"lng": lng,
+							"lat": lat
+						};
+					}
+					eat(0, tokenType.Q_RParen);
+
+					eat(1, null, 'type');
+					var nodeType = getParserValue();
+
+					eat(0, tokenType.RParen);
+				}
+
+				eat(0, tokenType.RParen);
+
+				i = i + 1;
+				parserNodes.push(new getInstanceOfParserNode(title, details, desc, nodeType, coordinate));
+
+				if (lookForwardFor(tokenType.LParen, tokenType.Q_RParen) == -1) {
+					break;
+				}
+			}
+
+			eat(0, tokenType.Q_RParen);
+			console.log("has parser " + i + " nodes");
+			break;
+		}
+		token = nextToken();
+	}
+}
+function error() {
+	console.log("Parser Error！");
+}
+// 判断是否为空
+function isEmpty(text) {
+	if (text == " ") {
+		return -1;
+	} else {
+		return 0;
+	}
+}
+// 判断是否文件结尾
+function isEOF(ch) {
+	if (ch == -1) {
+		return 0;
+	} else {
+		return -1;
+	}
+}
+// 判断是否为数字
+function isDigit(ch) {
+	if (ch >= '0' && ch <= '9') {
+		return 0;
+	} else {
+		return -1;
+	}
+}
+// 判断是否为字母
+function isAlpha(ch) {
+	if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) {
+		return 0;
+	} else {
+		return -1;
+	}
+}
+// 判断是否是汉字
+function isZHcn(ch) {
+	var unicode = ch.charCodeAt();
+	if (unicode >= 0x4e00 && unicode <= 0x9fa5) {
+		return 0;
+	} else {
+		return -1;
+	}
+}
+// 读取下一个字符
+function advance() {
+	index = index + 1;
+	// 是否读到文件结束
+	if (index > geoText.length) {
+		currentChar = -1; 
+	} else {
+		currentChar = geoText.charAt(index);
+	}
+}
+// 数字
+function getInteger() {
+	var result = [];
+	while(isEmpty(currentChar) == 0 && (isDigit(currentChar) == 0 || currentChar == '.')) {
+		result.push(currentChar);
+		advance();
+	} 
+	return result.join("");
+}
+// 单词
+function getWord() {
+	var result = [];
+	while(isEmpty(currentChar) == 0 && isAlpha(currentChar) == 0) {
+		result.push(currentChar);
+		advance();
+	} 
+	return result.join('');
+}
+// 包装Token {type, value}
+function Token(type, value) {
+	return {
+		"type": type,
+		"value": value
+	}
+}
+// 提取单词的token
+function nextToken() {
+	while(isEOF(currentChar) != 0) {
+		// 后面数据读取需要带有原始空格
+		// if (isEmpty(currentChar) != 0) {
+		// 	advance();
+		// 	continue;
+		// }
+
+		// 数字
+		if (isDigit(currentChar) == 0) {
+			return Token(tokenType.Integer, getInteger());
+		} else if (isAlpha(currentChar) == 0) {
+			// 单词
+			return Token(tokenType.Word, getWord());
+		} else if (currentChar == '{') {
+			advance();
+			return Token(tokenType.LParen, '{');
+		} else if (currentChar == '}') {
+			advance();
+			return Token(tokenType.RParen, '}');
+		} else if (currentChar == '[') {
+			advance();
+			return Token(tokenType.Q_LParen, '[');
+		} else if (currentChar == ']') {
+			advance();
+			return Token(tokenType.Q_RParen, ']');
+		} else if (currentChar == '=') {
+			advance();
+			return Token(tokenType.Equal, '=');
+		} else if (currentChar == '"') {
+			advance();
+			return Token(tokenType.Quotes, '"');
+		} else if (currentChar == ':') {
+			advance();
+			return Token(tokenType.Colon, ':');
+		} else if (currentChar == ',') {
+			advance();
+			return Token(tokenType.Comma, ',');
+		} else if (currentChar == '	') {
+			advance();
+			return Token(tokenType.TAB, 'TAB');
+		} else if (currentChar == '-') {
+			advance();
+			return Token(tokenType.Strip, '-');
+		}
+		else if (currentChar == '\n' || currentChar == '\r\n') {
+			advance();
+			return Token(tokenType.CLRF, 'CLRF');
+		}
+		else {
+			var ch = currentChar;
+			advance();
+			return Token(tokenType.NONE, ch);
+		}
+	}
+
+	return Token(tokenType.EOF, 'EOF');
+}
+```
+### Rending
+数据的加载与渲染，即把上一步解析出来的数据添加到map的左侧栏，左侧导航栏和map的分栏比采用了常见的2:8的比例，并绑定事件监听函数
+```JavaScript
+// ========== For map interactive ==========
+// This will let you use the .remove() function later on
+if (!('remove' in Element.prototype)) {
+  Element.prototype.remove = function() {
+    if (this.parentNode) {
+      this.parentNode.removeChild(this);
+    }
+  };
+}
+// 将解析的Nodes输出
+function buildLocationList(data) {
+  // Iterate through the list of stores
+	for (i = 0; i < data.length; i++) {
+  	var currentFeature = data[i];
+  	
+  	if (currentFeature.type == 'Point') {
+  			// Select the listing container in the HTML and append a div
+  		  // with the class 'item' for each store
+  			var listings = document.getElementById('listings');
+  			var listing = listings.appendChild(document.createElement('div'));
+  			listing.className = 'item';
+  		  listing.id = "listing-" + i;
+
+  			// Create a new link with the class 'title' for each store
+  			// and fill it with the store address
+  			var link = listing.appendChild(document.createElement('a'));
+  			link.href = '#';
+  			link.className = 'title';
+  			link.dataPosition = i;
+  			link.innerHTML = currentFeature.title;
+
+  			addEventListeners(link, currentFeature);
+
+  			// Create a new div with the class 'details' for each store
+  			// and fill it with the city and phone number
+  			var details = listing.appendChild(document.createElement('div'));
+  			details.innerHTML = currentFeature.details;
+  	}
+  }
+
+	buildPoemData();
+	buildTipData();
+}
+function buildPoemData() {
+	var i = parserNodes.length;
+	// 添加的诗的内容
+	var listings = document.getElementById('listings');
+	var listing = listings.appendChild(document.createElement('div'));
+	listing.className = 'item';
+  listing.id = "listing-" + i;
+
+  var poemStr = '#include &lt;stdio.h&gt;<br> \
+		void main()<br> \
+		{<br> \
+		&nbsp;&nbsp; double world;<br> \
+		&nbsp;&nbsp; unsigned letter;<br> \
+		&nbsp;&nbsp; short stay;<br> \
+		&nbsp;&nbsp; long memories;<br> \
+		&nbsp;&nbsp; printf("I miss you.\n");<br> \
+		}<br>';
+	var chStr = '两个人的世界，一封没有署名的信，短暂的重逢后，留下的只是回忆，我想你，我爱的人';
+	// Create a new div with the class 'details' for each store
+	// and fill it with the city and phone number
+	var details = listing.appendChild(document.createElement('div'));
+	details.innerHTML = poemStr + chStr;
+}
+function buildTipData() {
+	var i = parserNodes.length + 1;
+	// 添加的tip
+	var listings = document.getElementById('listings');
+	var listing = listings.appendChild(document.createElement('div'));
+	listing.className = 'item';
+  listing.id = "listing-" + i;
+
+
+	// Create a new div with the class 'details' for each store
+	// and fill it with the city and phone number
+	var details = listing.appendChild(document.createElement('div'));
+	details.innerHTML = 'Tips：<br>地图上的图标和连线可以点击的哦～';
+}
+// For event listeners
+function addEventListeners(element, currentFeature) {
+	// Add an event listener for the links in the sidebar listing
+	element.addEventListener('click', function(e){
+	    // 1. Fly to the point associated with the clicked link
+	    flyToCoordinate(currentFeature);
+	    // // 2. Close all other popups and display popup for clicked store
+	    createPopUp(currentFeature);
+	    // 3. Highlight listing in sidebar (and remove highlight for all other listings)
+	    var activeItem = document.getElementsByClassName('active');
+	    if (activeItem[0]) {
+	       activeItem[0].classList.remove('active');
+	    }
+	    this.parentNode.classList.add('active');
+	});
+}
+// For map interactive
+function flyToCoordinate(currentFeature) {
+	map.panTo(currentFeature.coordinate, true);
+}
+// 创建弹出图层
+function createPopUp(currentFeature) {
+  var popUps = document.getElementsByClassName('mapboxgl-popup');
+  // Check if there is already a popup on the map and if so, remove it
+  if (popUps[0]) popUps[0].remove();
+
+  var popup = L.popup()
+		.setLatLng(currentFeature.coordinate)
+		.setContent(currentFeature.desc)
+		.openOn(map);
+}
+```
+### Love Days
+这一部分相当于一个计算在一起时间的小插件，在左侧导航栏的最上面显示，很简单的一段JS代码，这一部分做完之后就会和文章开头贴的应用的效果图片一致了
+```JavaScript
+function buildDateData() {
+	// 开始时间戳
+	var f_time = "2014-10-19 23:59:59";
+	f_time = f_time.replace(/-/g,"/");
+	var b_time = Date.parse(new Date(f_time));
+	// 当前时间戳
+	var e_time = Date.parse(new Date());
+	var delta_s = (e_time - b_time)/1000;
+	var days = Math.floor(delta_s/(24*60*60));
+	var left = delta_s%(24*60*60);
+	var hours = Math.floor(left/(60*60));
+	left = left%(60*60);
+	var minutes = Math.floor(left/60);
+	var seconds = Math.floor(left%60);
+
+	var time_stamp = days + "天" + hours + "时" +  minutes + "分" + seconds + "秒";
+	updateDate(time_stamp);
+	// console.log(time_stamp);
+}
+
+function updateDate(time_stamp) {
+	var heading_time = document.getElementById("heading_time");
+	heading_time.innerHTML = time_stamp;
+}
+```
+## 应用发布
+这里还是选择把应用部署在 [GitHub](https://github.com/v4if/mapbox) 上，因为我的博客也是放在了GitHub上，之前绑定了一个域名，因此只需要给新的repository建立一个gh-pages的分支，用于项目的展示页就可以访问了`git checkout -b gh-pages`，然后为了加快访问速度，把图片等资源放在了七牛云存储上。
+应用上线地址 [v4if.me/mapbox](http://v4if.me/mapbox)
+## ～文末彩蛋～
+### 关于Data Parser
+前面花了很大的篇幅去写Data Parser，但是在调试的时候发现其实不用Parser，直接使用就可以了，只是使用的时候数组嵌套的会比较深。当时已经解析了大概80%左右了，就`坚强的`解析下去了。
+![forbunny](2016-09-08-113148.png)
+### 关于手机浏览器的调试
+开发过程中出现了一个比较奇怪的问题，就是应用发布之后电脑上可以正常访问，手机端的浏览器访问左侧的城市列表导航栏显示不出来，在电脑上利用浏览器模拟手机客户端访问也是没有问题的。
+然后同实验室的介绍说uc 开发者版可以进行调试，确实是个不错的工具
+[uc 开发者版](http://plus.uc.cn/document/webapp/doc5.html) 链接是UC的APK和doc的说明
+![forbunny](ucbrow_4.png)
