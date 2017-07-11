@@ -1,3 +1,6 @@
 阅读源码之前首先整理了一下手头阅读源码的工具，以visual studio code为主，然后用understand生成了几张调用图辅助源码分析。
 
 先说一个vs code阅读源码的小技巧，在linux上 `Ctrl+ 鼠标左键` 可以轻松跳转到代码定义的地方，撤销跳转即返回到跳转前的位置，快捷键为 `Ctrl + Alt + -`，有了这两个快捷键可以轻松的在阅读源码的时候来回跳转，查看结构体以及函数的原型。
+
+understand生成的UML调用图
+![UMLClassDiagram](http://oowjr8zsi.bkt.clouddn.com/UMLClassDiagram.png)
