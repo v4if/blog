@@ -69,6 +69,7 @@ ev_default_loop (unsigned int flags) EV_THROW
 看这段代码的时候一直在疑惑`ev_default_loop_ptr`是从哪里来的，怎么变量没有声明就将default_loop_struct地址赋值过去了。。。
 
 玄机都隐藏在下面的代码中：
+
 `EV_API_DECL struct ev_loop *ev_default_loop_ptr = 0; /* needs to be initialised to make it a definition despite extern */`
 
 注意：既指定的了关键字extern又指定了一个显示的初始值的全局对象的声明，将被视为该对象的定义!
