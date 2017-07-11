@@ -1,6 +1,6 @@
 # libev源码分析 - 从官方例程角度入手
 
-阅读源码之前首先整理了一下手头阅读源码的工具，以visual studio code为主，然后用understand生成了几张调用图辅助源码分析。
+阅读源码之前首先整理了一下手头阅读源码的工具，以visual studio code为主，然后用understand生成了几张调用图辅助源码分析。在分析出大概框架之后可以利用clion配合gdb动态跟进官方的例程进行单步调试验证自己的分析是否正确，进一步理清自己的思路。
 
 先说一个vs code阅读源码的小技巧，在linux上 `Ctrl+ 鼠标左键` 可以轻松跳转到代码定义的地方，撤销跳转即返回到跳转前的位置，快捷键为 `Ctrl + Alt + -`，有了这两个快捷键可以轻松的在阅读源码的时候来回跳转，查看结构体以及函数的原型。
 
@@ -80,4 +80,10 @@ ev_default_loop (unsigned int flags) EV_THROW
 
 ev_default_loop(0)主要的工作是：
 
-1. 将全局对象ev_default_loop_ptr即ev_loop的指针初始化为默认loop`static struct ev_loop default_loop_struct;`的地址
+1. 将全局对象ev_default_loop_ptr即ev_loop的指针初始化为默认loop`static struct ev_loop default_loop_struct;`的地址，初始化ev_loop结构体字段
+2. 在linux下将backend即同步事件分离器初始化为epoll，IO多路复用。可以同时监听多个文件句柄，从而提高系统的并发性，但是epoll本身是阻塞的
+```c++
+#if EV_USE_EPOLL
+      if (!backend && (flags & EVBACKEND_EPOLL )) backend = epoll_init  (EV_A_ flags);
+#endif
+```
