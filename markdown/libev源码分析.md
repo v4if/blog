@@ -90,9 +90,11 @@ ev_default_loop(0)主要的工作是：
 
 ## ev_io
 `#define ev_io_init(ev,cb,fd,events)          do { ev_init ((ev), (cb)); ev_io_set ((ev),(fd),(events)); } while (0)`
+
 使用`do{}while(0)`可以很好的包裹宏展开
 
 ev_watcher结构体
+
 ![2017-07-12_09-58-57](http://oowjr8zsi.bkt.clouddn.com/2017-07-12_09-58-57.png)
 
 ev_watcher_list
