@@ -1,6 +1,6 @@
 # libev源码分析 - 从官方例程角度入手
 
-阅读源码之前首先整理了一下手头阅读源码的工具，以visual studio code为主，然后用understand生成了几张调用图辅助源码分析。在分析出大概框架之后可以利用clion配合gdb动态跟进官方的例程进行单步调试验证自己的分析是否正确，进一步理清自己的思路。
+阅读源码之前首先整理了一下手头阅读源码的工具，以visual studio code为主，然后用understand生成了几张调用图辅助源码分析。在分析出大概框架之后可以利用clion配合gdb动态跟进官方的例程进行单步调试验证自己的分析是否正确，进一步理清自己的思路。在分析的时候最好分析出来一部分然后先写出来，一是有助于后面的分析，在后面分析的时候可以结合前面已经写的内容，二是全盘分析结束之后前面有的细节可能会遗忘，如果发现前面分析有误还可以进一步修改
 
 先说一个vs code阅读源码的小技巧，在linux上 `Ctrl+ 鼠标左键` 可以轻松跳转到代码定义的地方，撤销跳转即返回到跳转前的位置，快捷键为 `Ctrl + Alt + -`，有了这两个快捷键可以轻松的在阅读源码的时候来回跳转，查看结构体以及函数的原型。
 
@@ -8,6 +8,8 @@ understand生成的UML调用图
 ![UMLClassDiagram](http://oowjr8zsi.bkt.clouddn.com/UMLClassDiagram.png)
 
 ## 前言  
+主要分析`ev.c`和`ev.h`文件，8000行左右的代码量 
+
 编译阶段打印宏的内容
 ```c++
 //首先定义两个辅助宏
@@ -134,4 +136,35 @@ typedef struct ev_io
 ```c++
   ((ev_watcher *)(void *)(ev))->active  =	\
   ((ev_watcher *)(void *)(ev))->pending = 0;	\
+```
+
+事件默认优先级为0
+
+### ev_io_start
+```c++
+void noinline
+ev_io_start (EV_P_ ev_io *w) EV_THROW
+{
+  int fd = w->fd;
+
+  if (expect_false (ev_is_active (w)))
+    return;
+
+  assert (("libev: ev_io_start called with negative fd", fd >= 0));
+  assert (("libev: ev_io_start called with illegal event mask", !(w->events & ~(EV__IOFDSET | EV_READ | EV_WRITE))));
+
+  EV_FREQUENT_CHECK;
+
+  ev_start (EV_A_ (W)w, 1);
+  array_needsize (ANFD, anfds, anfdmax, fd + 1, array_init_zero);
+  wlist_add (&anfds[fd].head, (WL)w);
+
+  /* common bug, apparently */
+  assert (("libev: ev_io_start called with corrupted watcher", ((WL)w)->next != (WL)w));
+
+  fd_change (EV_A_ fd, w->events & EV__IOFDSET | EV_ANFD_REIFY);
+  w->events &= ~EV__IOFDSET;
+
+  EV_FREQUENT_CHECK;
+}
 ```
