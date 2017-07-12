@@ -87,3 +87,31 @@ ev_default_loop(0)主要的工作是：
       if (!backend && (flags & EVBACKEND_EPOLL )) backend = epoll_init  (EV_A_ flags);
 #endif
 ```
+
+## ev_io
+`#define ev_io_init(ev,cb,fd,events)          do { ev_init ((ev), (cb)); ev_io_set ((ev),(fd),(events)); } while (0)`
+使用`do{}while(0)`可以很好的包裹宏展开
+
+ev_watcher结构体
+![2017-07-12_09-58-57](http://oowjr8zsi.bkt.clouddn.com/2017-07-12_09-58-57.png)
+
+ev_watcher_list
+```c++
+#define EV_WATCHER_LIST(type)			\
+  EV_WATCHER (type)				\
+  struct ev_watcher_list *next; /* private */
+```
+
+ev_io
+```c++
+/* invoked when fd is either EV_READable or EV_WRITEable */
+/* revent EV_READ, EV_WRITE */
+typedef struct ev_io
+{
+  EV_WATCHER_LIST (ev_io)
+
+  int fd;     /* ro */
+  int events; /* ro */
+} ev_io;
+```
+
