@@ -155,7 +155,7 @@ ev_io_start (EV_P_ ev_io *w) EV_THROW
 
   EV_FREQUENT_CHECK;
 
-  ev_start (EV_A_ (W)w, 1);
+  ev_start (EV_A_ (W)w, 1); // [1]
   array_needsize (ANFD, anfds, anfdmax, fd + 1, array_init_zero);
   wlist_add (&anfds[fd].head, (WL)w);
 
@@ -168,3 +168,4 @@ ev_io_start (EV_P_ ev_io *w) EV_THROW
   EV_FREQUENT_CHECK;
 }
 ```
+1. 调整ev_watcher的优先级，设置active为1，将loop的activecnt++递增，即当前io上挂了多少个激活的ev_watcher
