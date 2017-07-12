@@ -89,10 +89,6 @@ ev_default_loop(0)主要的工作是：
 ```
 
 ## ev_io
-`#define ev_io_init(ev,cb,fd,events)          do { ev_init ((ev), (cb)); ev_io_set ((ev),(fd),(events)); } while (0)`
-
-使用`do{}while(0)`可以很好的包裹宏展开
-
 ev_watcher结构体
 
 ![2017-07-12_09-58-57](http://oowjr8zsi.bkt.clouddn.com/2017-07-12_09-58-57.png)
@@ -117,3 +113,25 @@ typedef struct ev_io
 } ev_io;
 ```
 
+### ev_io_init
+```c++
+#define ev_io_init(ev,cb,fd,events)          do { ev_init ((ev), (cb)); ev_io_set ((ev),(fd),(events)); } while (0)
+
+/* these may evaluate ev multiple times, and the other arguments at most once */
+/* either use ev_init + ev_TYPE_set, or the ev_TYPE_init macro, below, to first initialise a watcher */
+#define ev_init(ev,cb_) do {			\
+  ((ev_watcher *)(void *)(ev))->active  =	\
+  ((ev_watcher *)(void *)(ev))->pending = 0;	\
+  ev_set_priority ((ev), 0);			\
+  ev_set_cb ((ev), cb_);			\
+} while (0)
+
+#define ev_io_set(ev,fd_,events_)            do { (ev)->fd = (fd_); (ev)->events = (events_) | EV__IOFDSET; } while (0)
+```
+使用`do{}while(0)`可以很好的包裹宏展开
+
+初始化的时候很好的利用了ev_io中ev_watcher_list在结构体顶部，ev_watcher在ev_watcher_list顶部，有一个指针的向上强转
+```c++
+  ((ev_watcher *)(void *)(ev))->active  =	\
+  ((ev_watcher *)(void *)(ev))->pending = 0;	\
+```
