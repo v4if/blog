@@ -19,10 +19,6 @@ understand生成的UML调用图
 #pragma message(PRINT_MACRO(EV_API_DECL))
 ```
 
-Reactor模式
-
-![Reactor_Structures](http://oowjr8zsi.bkt.clouddn.com/Reactor_Structures.png)
-
 主要记住这几个宏的含义：
 ```c++
 // 用于ev_loop指针变量声明
@@ -34,6 +30,10 @@ Reactor模式
 // loop_ptr作为第一个实参，用于函数声明
 # define EV_A_ EV_A,                              /* a loop as first of multiple arguments */
 ```
+
+Reactor模式
+
+![Reactor_Structures](http://oowjr8zsi.bkt.clouddn.com/Reactor_Structures.png)
 
 ## ev_loop
 `# define EV_DEFAULT  ev_default_loop (0)          /* the default loop as sole arg */`
