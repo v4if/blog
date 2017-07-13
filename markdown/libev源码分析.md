@@ -8,7 +8,7 @@ understand生成的UML调用图
 ![UMLClassDiagram](http://oowjr8zsi.bkt.clouddn.com/UMLClassDiagram.png)
 
 ## 前言  
-主要分析`ev.c`和`ev.h`文件，8000行左右的代码量 
+主要分析`ev.c`、`ev.h`和`ev_epoll.c`文件，8000行左右的代码量 
 
 编译阶段打印宏的内容
 ```c++
@@ -18,6 +18,10 @@ understand生成的UML调用图
 //编译阶段打印宏内容
 #pragma message(PRINT_MACRO(EV_API_DECL))
 ```
+
+Reactor模式
+
+![Reactor_Structures](http://oowjr8zsi.bkt.clouddn.com/Reactor_Structures.png)
 
 主要记住这几个宏的含义：
 ```c++
@@ -202,7 +206,7 @@ do{
 libev在关联fd和watcher的时候利用了fd作为下标，然后挂了watcher_list
 
 > 从alloc_fd的实现上看，一般情况下，Linux每次都从上一次分配的fd（利用文件表中的一个变量next_fd记录），来开始查找未用的文件描述符。这样保证新分配的文件描述符都是持续增长的，直到上限，然后回绕。
-今天我看了close的内核实现，它调用__put_unused_fd用于释放文件描述符。
+close的内核实现，它调用__put_unused_fd用于释放文件描述符。
 ```c++
 static void __put_unused_fd(struct files_struct *files, unsigned int fd)
 {
