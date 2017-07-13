@@ -176,7 +176,7 @@ ev_io_start (EV_P_ ev_io *w) EV_THROW
 
  > 现在处理器都是流水线的，有些里面有多个逻辑运算单元，系统可以提前取多条指令进行并行处理，但遇到跳转时，则需要重新取指令，这相对于不用重新去指令就降低了速度。所以就引入了 __builtin_expect，目的是增加条件分支预测的准确性，cpu 会提前装载后面的指令，遇到条件转移指令时会提前预测并装载某个分 支的指令。确认该条件是极少发生的，还是多数情况下会发生。编译器会产生相应的代码来优化 cpu 执行效率。 
 
-1. 调整ev_watcher的优先级，设置active为1，将loop的activecnt++递增，即当前loop上挂了多少个激活的ev_watcher
+1. 调整ev_watcher的优先级，设置active为1，将loop的activecnt++递增，即当前loopptr上挂了多少个激活的ev_watcher
 2. 将ev_watcher_list挂载到loop.anfds.head上
 
 ## ev_run
@@ -184,8 +184,53 @@ ev_io_start (EV_P_ ev_io *w) EV_THROW
 ```c++
 do{
 	xxxx;
-	backend_poll();
-	xxxx
+	backend_poll(); // [1]
+	EV_INVOKE_PENDING // [2]
 }while(condition_is_ok)
 ```
-ev_invoke_pending  对应调度器dipatcher
+1. fd上的watcher如果监听的事件event和epoll得到的revent一致，则将该watcher添加到loopptr->pendings[pri][pendingcnt]上，loopptr->pendings是一个指针数组，相当于在第二维上动态的二维数组
+2. ev_invoke_pending对应调度器dipatcher，从后到前依次调用挂在pendings上的回调
+
+相关数据结构如下：
+![215034_LAfF_917596](http://oowjr8zsi.bkt.clouddn.com/215034_LAfF_917596.png)
+
+## 总结
+> libev整个事件模型的框架是： 取得一个合适的时间，用这个时间去poll。然后标记poll之后pending的文件对象。poll出来后判断定时器然后统一处理pending对象
+
+### 关于anfds
+libev在关联fd和watcher的时候利用了fd作为下标，然后挂了watcher_list
+
+> 从alloc_fd的实现上看，一般情况下，Linux每次都从上一次分配的fd（利用文件表中的一个变量next_fd记录），来开始查找未用的文件描述符。这样保证新分配的文件描述符都是持续增长的，直到上限，然后回绕。
+今天我看了close的内核实现，它调用__put_unused_fd用于释放文件描述符。
+static void __put_unused_fd(struct files_struct *files, unsigned int fd)
+{
+  struct fdtable *fdt = files_fdtable(files);
+  __FD_CLR(fd, fdt->open_fds);
+  if (fd < files->next_fd)
+  files->next_fd = fd;
+}
+从上面的代码中，可以发现，当释放的fd比文件表中的nextfd小的话，nextfd就会更新为当前fd。
+结合alloc_fd的代码，进一步得到Linux文件描述符的选择策略。当持有的文件描述符关闭时，Linux会尽快的重用该文件描述符，而不是使用递增的文件描述符值
+
+因此在anfds上可能会存在空洞，也存在文件描述符重用之后没有更新watcher的隐患
+
+### 同步异步、阻塞非阻塞
+下面是一段摘抄：
+> 同步和异步
+同步和异步是针对应用程序和内核的交互而言的，同步指的是用户进程触发I/O操作并等待或者轮询的去查看I/O操作是否就绪，而异步是指用户进程触发I/O操作以后便开始做自己的事情，而当I/O操作已经完成的时候会得到I/O完成的通知。
+
+> 阻塞和非阻塞
+阻塞和非阻塞是针对于进程在访问数据的时候，根据I/O操作的就绪状态来采取的不同方式，说白了是一种读取或者写入操作函数的实现方式，阻塞方式下读取或者写入函数将一直等待，而非阻塞方式下，读取或者写入函数会立即返回一个状态值。
+
+I/O模型
+> 同步阻塞I/O
+在此种方式下，用户进程在发起一个I/O操作以后，必须等待I/O操作的完成，只有当真正完成了I/O操作以后，用户进程才能运行。Java传统的I/O模型属于此种方式。
+
+> 同步非阻塞I/O
+在此种方式下，用户进程发起一个I/O操作以后边可返回做其它事情，但是用户进程需要时不时的询问I/O操作是否就绪，这就要求用户进程不停的去询问，从而引入不必要的CPU资源浪费。目前Java的NIO就属于同步非阻塞I/O。
+
+> 异步阻塞I/O
+此种方式下是指应用发起一个I/O操作以后，不等待内核I/O操作的完成，等内核完成I/O操作以后会通知应用程序，这其实就是同步和异步最关键的区别，同步必须等待或者主动的去询问I/O是否完成，那么为什么说是阻塞的呢？因为此时是通过 select 系统调用来完成的，而 select 函数本身的实现方式是阻塞的，而采用 select 函数有个好处就是它可以同时监听多个文件句柄，从而提高系统的并发性。
+
+> 异步非阻塞I/O
+在此种模式下，用户进程只需要发起一个I/O操作然后立即返回，等I/O操作真正的完成以后，应用程序会得到I/O操作完成的通知，此时用户进程只需要对数据进行处理就好了，不需要进行实际的I/O读写操作，因为真正的I/O读取或者写入操作已经由内核完成了。目前Java中还没有支持此种I/O模型。
