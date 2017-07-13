@@ -10,7 +10,7 @@ understand生成的UML调用图
 ## 前言  
 主要分析`ev.c`、`ev.h`和`ev_epoll.c`文件，8000行左右的代码量 
 
-编译阶段打印宏的内容
+### 编译阶段打印宏的内容
 ```c++
 //首先定义两个辅助宏
 #define   PRINT_MACRO_HELPER(x) #x  // 把参数x转化成字符串
@@ -31,9 +31,60 @@ understand生成的UML调用图
 # define EV_A_ EV_A,                              /* a loop as first of multiple arguments */
 ```
 
-Reactor模式
+### Reactor模式
 
 ![Reactor_Structures](http://oowjr8zsi.bkt.clouddn.com/Reactor_Structures.png)
+
+### 官方例程
+```c++
+// a single header file is required
+#include <ev.h>
+#include <stdio.h> // for puts
+// every watcher type has its own typedef'd struct
+// with the name ev_TYPE
+ev_io stdin_watcher;  // IO事件
+ev_timer timeout_watcher; // 定时器事件
+// all watcher callbacks have a similar signature
+// this callback is called when data is readable on stdin
+static void
+stdin_cb (EV_P_ ev_io *w, int revents)
+{
+    puts ("stdin ready");
+    // for one-shot events, one must manually stop the watcher
+    // with its corresponding stop function.
+    ev_io_stop (EV_A_ w);
+    // this causes all nested ev_run's to stop iterating
+    ev_break (EV_A_ EVBREAK_ALL);
+}
+// another callback, this time for a time-out
+static void
+timeout_cb (EV_P_ ev_timer *w, int revents)
+{
+    puts ("timeout");
+    // this causes the innermost ev_run to stop iterating
+    ev_break (EV_A_ EVBREAK_ONE);
+}
+
+int
+main (void)
+{
+    // use the default event loop unless you have special needs
+    struct ev_loop *loop = EV_DEFAULT;
+    // initialise an io watcher, then start it
+    // this one will watch for stdin to become readable
+    ev_io_init (&stdin_watcher, stdin_cb, /*STDIN_FILENO*/ 0, EV_READ);  // 设置对stdin_watcher这个fd关注读事件，并指定回调函数
+    ev_io_start (loop, &stdin_watcher);  // // 激活stdin_watcher这个fd，将其设置到loop中
+    // initialise a timer watcher, then start it
+    // simple non-repeating 5.5 second timeout
+    ev_timer_init (&timeout_watcher, timeout_cb, 5.5, 0.); //设置一个定时器，并指定一个回调函数，这个timer只执行一次，5.5s后执行
+    ev_timer_start (loop, &timeout_watcher); //激活这个定时器，将其设置到loop中
+
+    // now wait for events to arrive
+    ev_run (loop, 0);
+    // break was called, so exit
+    return 0;
+}
+```
 
 ## ev_loop
 `# define EV_DEFAULT  ev_default_loop (0)          /* the default loop as sole arg */`
