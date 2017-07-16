@@ -253,6 +253,8 @@ do{
 ## 总结
 > libev整个事件模型的框架是： 取得一个合适的时间，用这个时间去poll。然后标记poll之后pending的文件对象。poll出来后判断定时器然后统一处理pending对象
 
+在阅读源码之后写了一个小轮子mini-reactor地址如下：
+[mini-reactor](https://github.com/v4if/mini_codecraft/tree/master/mini_reactor) : https://github.com/v4if/mini_codecraft/tree/master/mini_reactor
 ### 关于anfds
 libev在关联fd和watcher的时候利用了fd作为下标，然后挂了watcher_list
 
