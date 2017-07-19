@@ -12,5 +12,9 @@ b）f：是输出格式。比如x是以16进制形式输出，o是以8进制形�
 
 c）u：标明一个单元的长度。b是一个byte，h是两个byte（halfword），w是四个byte（word），g是八个byte（giant word）。
 
-### c++flit mangling_name
-linux从name mangling后的名字来找原函数的方法
+### c++flit
+linux从name mangling后的名字来找原函数的方法，如`c++filt _ZTV1A`
+
+### 按照派生类打印对象
+`set print object on`
+set p obj <on/off>: 在C++中，如果一个对象指针指向其派生类，如果打开这个选项，GDB会自动按照虚方法调用的规则显示输出，如果关闭这个选项的话，GDB就不管虚函数表了。这个选项默认是off。 使用show print object查看对象选项的设置。 
