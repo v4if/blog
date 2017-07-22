@@ -12,7 +12,7 @@ set p obj <on/off>: 在C++中，如果一个对象指针指向其派生类，如
 之后执行如下命令查看虚函数表：`info vtbl 对象`或者`info vtbl 指针或引用所指向或绑定的对象`
 
 ### c++filt
-GNU提供的从name mangling后的名字来找原函数的方法，如`c++filt _ZTV1A`
+GNU提供的从name mangling后的名字来找原函数的方法，如`c++filt _ZTV1A`，在命令行下运行
 
 ### 打印内存的值
 gdb中使用“x”命令来打印内存的值，格式为“x/nfu addr”。含义为以f格式打印从addr开始的n个长度单元为u的内存值。参数具体含义如下：<br>
@@ -24,6 +24,30 @@ gdb中使用“x”命令来打印内存的值，格式为“x/nfu addr”。含
 p 命令可以用来打印一个表达式的值。<br>
 使用如下：p/f 表达式<br>
 f 代表格式控制符，同上。
+
+## 单继承
+```c++
+class A{
+public:
+    int a;
+    virtual void foo(){ std::cout << "A::foo()" << std::endl; }
+    void bar(){ std::cout << "A::bar()" << std::endl; }
+};
+class B: public A{
+public:
+    int b;
+    void foo(){ std::cout << "B::foo()" << std::endl; }
+};
+class C: public B{
+public:
+    int c;
+    void foo(){ std::cout << "C::foo()" << std::endl; }
+};
+```
+
+
+
+
 
 ```c++
 $4 = (A) {
