@@ -329,4 +329,3 @@ namespace zmq {
 }
 zmq::atomic_counter_t zmq::ctx_t::max_socket_id; /* 静态成员在使用前必须先初始化 */
 ```
-
