@@ -1,12 +1,16 @@
 ZMQ (ZeroMQ简称ZMQ)是一个简单好用的传输层，像框架一样的一个socket library，他使得Socket编程更加简单、简洁和性能更高。是一个消息处理队列库，可在多个线程、内核和主机之间弹性伸缩。ZMQ的明确目标是“成为标准网络协议栈的一部分，之后进入Linux内核”。
+
 ZeroMQ几乎所有的I/O操作都是异步的，主线程不会被阻塞。ZeroMQ会根据用户调用zmq_init函数时传入的接口参数，创建对应数量的I/O Thread。每个I/O Thread都有与之绑定的Poller，Poller采用经典的Reactor模式实现，Poller根据不同操作系统平台使用不同的网络I/O模型（select、poll、epoll、devpoll、kequeue等）。
+
 主线程与I/O线程通过Mail Box传递消息来进行通信。Server开始监听或者Client发起连接时，在主线程中创建zmq_connecter或zmq_listener，通过Mail Box发消息的形式将其绑定到I/O线程，I/O线程会把zmq_connecter或zmq_listener添加到Poller中用以侦听读/写事件。
+
 Server与Client在第一次通信时，会创建zmq_init来发送identity，用以进行认证。认证结束后，双方会为此次连接创建Session，以后双方就通过Session进行通信。每个Session都会关联到相应的读/写管道， 主线程收发消息只是分别从管道中读/写数据。Session并不实际跟kernel交换I/O数据，而是通过plugin到Session中的Engine来与kernel交换I/O数据。
 
 在多线程环境中，ZMQ的使用者不必使用互斥锁，条件变量或信号等用来同步并行处理的东西。ZMQ中的每个对象只会在自己所在的线程上执行，其他线程只能通过发送消息（以下称之为“命令”，以区别于使用者发送给ZMQ的消息）与对象进行交互而不能直接使用对象（这就是为什么是不需要互斥体的原因），同时对象间也可以相互发送命令进行交互（实际上线程在ZMQ中也是一种对象）。
 
-## 我们需要关注的ZMQ对象包括：消息、套接字、上下文。
-==========================================
+`我们需要关注的ZMQ对象包括：消息、套接字、上下文。`
+
+
 ## 消息
 
 ```c++
@@ -156,10 +160,13 @@ int zmq::msg_t::close ()
     return 0;
 }
 ```
+
 小消息直接存储在vsm中，大消息需要另外开辟空间
-lmsg共享消息计数
-====================================================
-### 套接字
+
+用u.zclmsg.content->refcnt对堆上的大消息进行引用计数，close的时候当refcnt为0时释放内存
+
+
+## 套接字
 ```c++
 void *zmq_socket (void *ctx_, int type_)
 {
@@ -284,7 +291,8 @@ int zmq_bind (void *s_, const char *addr_)
 }
 ```
 根据io_thread上加载fd的数量进行负载均衡选择最小的作为当前线程，每个io_thread_t类有一个poller_t*的变量poller，当前线程的事件分离器，在linux上表现为epool，继承自zmq::poller_base_t，且zmq::poller_base_t.load成员变量load记录了当前线程上监听的fd的数量
-=====================================================
+
+
 ## 上下文
 ```c++
 void *zmq_init (int io_threads_)
@@ -306,6 +314,7 @@ void *zmq_ctx_new (void)
     return ctx;
 }
 ```
+
 new && new(std::nothrow)
 > new(std::nothrow) 顾名思义，即不抛出异常，当new一个对象失败时，默认设置该对象为NULL，这样可以方便的通过if(ctx == NULL) 来判断new操作是否成功
 
