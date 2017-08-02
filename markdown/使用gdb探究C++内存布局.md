@@ -31,17 +31,20 @@ f 代表格式控制符，同上。
 class A{
 public:
     int a;
+    A():a(0x1) {}
     virtual void foo(){ std::cout << "A::foo()" << std::endl; }
     void bar(){ std::cout << "A::bar()" << std::endl; }
 };
 class B: public A{
 public:
     int b;
+    B():A(),b(0x2) {}
     void foo(){ std::cout << "B::foo()" << std::endl; }
 };
 class C: public B{
 public:
     int c;
+    C():C(), c(0x3) {}
     void foo(){ std::cout << "C::foo()" << std::endl; }
 };
 int main() {
@@ -51,21 +54,23 @@ int main() {
     return 0;
 }
 ```
-运行结果:
+
+运行结果
+
 ```c++
 C::foo()
 4 4
 ```
+int和int* 都是4个字节，且p为基类B的指针，指向派生类C，virtual foo()函数动态重载
 
-
-
-
-
+对象内存布局
+ 
 ```c++
-$4 = (A) {
-  _vptr.A = 0x4051a8 <vtable for A+8>, 
+(gdb) set p pre on
+(gdb) p a
+$1 = (A) {
+  _vptr.A = 0x405188 <vtable for A+8>, 
   a = 1
 }
-
 /* 指向虚函数表首地址+8，即第一个函数地址 */
 ```
