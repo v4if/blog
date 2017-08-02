@@ -27,6 +27,7 @@ f 代表格式控制符，同上。
 
 ## 单继承
 ```c++
+#include <iostream>
 class A{
 public:
     int a;
@@ -43,6 +44,17 @@ public:
     int c;
     void foo(){ std::cout << "C::foo()" << std::endl; }
 };
+int main() {
+    A a; B b; C c; B *p = &c;
+    p->foo();
+    std::cout << sizeof(int) << " " << sizeof(int*) << std::endl;
+    return 0;
+}
+```
+运行结果:
+```c++
+C::foo()
+4 4
 ```
 
 
