@@ -60,7 +60,7 @@ int main() {
 C::foo()
 4 4
 ```
-int和int* 都是4个字节，且p为基类B的指针，指向派生类C，virtual foo()函数动态重载
+int和int* 都是4个字节，且p为基类B的指针，指向派生类C，virtual foo()函数运行时多态
 
 #### 对象内存布局
  
