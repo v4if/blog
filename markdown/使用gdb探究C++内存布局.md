@@ -1,4 +1,3 @@
-
 ## gdb使用技巧
 #### 每行打印一个结构体成员
 可以执行`set print pretty on`命令，这样每行只会显示结构体的一名成员，而且还会根据成员的定义层次进行缩进
@@ -253,7 +252,7 @@ $5 = (D *) 0x28fee8
 `b: vptr.A | a | vptr.B | b`
 `c: vptr.A | a | vptr.C | c`
 `d: vptr.A | a | vptr.B | b | vptr.C | c | d`
->* `A *pa = &d;B *pb = &d;C*p c= &d;`，都指向d的起始地址&d = 0x28fee8 。调用pb->foo()和pc->foo()时需要对第一个参数this指针进行调整，分别指向_vptr.B和_vptr.C，而pa->foo()不需要。
+>* `A *pa = &d;B *pb = &d;C*p c= &d;`，都指向d的起始地址&d = 0x28fee8 。假如d类里实现的虚函数都放在A的虚函数表里，没有实现的放在被继承的基类里面
 
 ## 虚函数表里到底有些什么
 ```c++
