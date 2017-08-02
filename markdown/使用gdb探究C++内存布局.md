@@ -254,3 +254,29 @@ $5 = (D *) 0x28fee8
 `c: vptr.A | a | vptr.C | c`
 `d: vptr.A | a | vptr.B | b | vptr.C | c | d`
 >* `A *pa = &d;B *pb = &d;C*p c= &d;`，都指向d的起始地址&d = 0x28fee8 。调用pb->foo()和pc->foo()时需要对第一个参数this指针进行调整，分别指向_vptr.B和_vptr.C，而pa->foo()不需要。
+
+## 虚函数表里到底有些什么
+```c++
+/* vtable.cpp */
+class A{
+public:
+    int ia;
+    virtual void foo(){ cout << "A::foo()" << endl; }
+    virtual void bar(){ cout << "A::bar()" << endl; }
+};
+class B: public A{
+public:
+    int ib;
+    virtual void foo(){ cout << "B::foo()" << endl; }
+};
+```
+```c++
+我们可以利用g++ -fdump-class-hierarchy vtable.cpp得到class A和class B的vtable（结果在文件vtable.cpp.002t.class里），如下所示：
+
+Vtable for A
+A::_ZTV1A: 4u entries
+0     (int (*)(...))0
+4     (int (*)(...))(& _ZTI1A)
+8     (int (*)(...))A::foo
+12    (int (*)(...))A::bar
+```
