@@ -47,6 +47,7 @@ destruct.
 可以看到`foo`中的temp和`main`中v0所在的地址值是相同的，且只有一次构造和析构操作，因此可以看到返回的类对象直接被构造在将要拷贝/移动到的对象栈空间上。
 
 ![2e8834591ba5295d242d6da33bca839a_b](http://oowjr8zsi.bkt.clouddn.com/2e8834591ba5295d242d6da33bca839a_b.jpg)
+
 图片来源：[知乎-什么是完整的RVO以及NRVO过程](https://www.zhihu.com/question/48964719)
 
 在看了维基百科上关于[返回值优化](https://zh.wikipedia.org/wiki/%E8%BF%94%E5%9B%9E%E5%80%BC%E4%BC%98%E5%8C%96)的解释之后，对于函数返回类对象从实现角度，一种实现办法是在函数调用语句前在stack frame上声明一个隐藏对象，把该对象的地址隐蔽传入被调用函数，函数的返回对象直接构造或者复制构造到该地址上。
