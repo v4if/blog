@@ -23,10 +23,10 @@ void func_args_template(){}
 `constexpr`，即常量表达式
 
 ```c++
-constexpr int getCompileConst() {return 1;}
+constexpr int get_compile_const() {return 1;}
 ```
 
-有了`constexpr`，编译器就可以在编译时期对`getCompileConst`表达式进行值计算(evaluation)，从而将其视为一个编译时期的常量
+有了`constexpr`，编译器就可以在编译时期对`get_compile_const`表达式进行值计算(evaluation)，从而将其视为一个编译时期的常量
 
 ## 常量表达式函数
 通常可以在函数返回类型前加入关键字`constexpr`来使其成为常量表达式函数，但常量表达式函数要求非常严格：
@@ -53,6 +53,13 @@ constexpr MyType mt = {0};
 常量表达式构造函数必须满足一下两点：
 >* 函数体必须为空
 >* 初始化列表只能由常量表达式赋值
+
+## 常量表达式用于模板函数
+```c++
+template<typename T>
+constexpr T const_exp(T t) {return t;}
+```
+不过由于模板的不确定性，模板函数是否被实例化为一个能够满足编译时常量性的版本通常也是未知的。C++11标准规定，当声明为常量表达式的模板函数后，而某个该模板函数的实例化结果不满足常量表达式需求的话，constexpr会被自动忽略，该实例化后的函数将成为一个普通函数
 
 ## 参考资料
 《深入理解C++11-C++ 11新特性解析与应用》
