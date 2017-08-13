@@ -9,6 +9,30 @@
 >* （2）一些需要保证原子性但是没有被第（1）条机制提供支持的操作（例如read-modify-write）可以通过使用”LOCK#”来锁定总线，从而保证操作的原子性
 >* （3）因为很多内存数据是已经存放在L1/L2 cache中了，对这些数据的原子操作只需要与本地的cache打交道，而不需要与总线打交道，所以CPU就提供了cache coherency机制来保证其它的那些也cache了这些数据的processor能读到最新的值
 
+```c++
+#include <iostream>
+#include <atomic>
+#include <thread>
+
+std::atomic<long long> total{0};
+
+void thread_func() {
+    for (long long i = 0; i < 100000000LL; ++i) {
+        total++;
+    }
+}
+
+int main() {
+    std::thread t1(thread_func);
+    std::thread t2(thread_func);
+
+    t1.join();
+    t2.join();
+
+    std::cout << total << std::endl;
+    return 0;
+}
+```
 
 ## 参考资料
 [C++ 中的原子性操作](http://lib.csdn.net/article/cplusplus/21872?knId=1169)
