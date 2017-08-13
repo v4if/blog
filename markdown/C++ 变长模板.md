@@ -58,6 +58,30 @@ template<> class tuple<> {}; //边界条件
 
 语言的其他地方则无法展开参数包
 
+```c++
+#include <iostream>
+#include <typeinfo>
+
+template<typename... T>
+void dummy_wrapper(T...) {}
+
+template<typename Element>
+Element v_print(Element e) {
+    std::cout << e << std::endl;
+    return e;
+}
+
+template<typename... Elements>
+void func(Elements... E) {
+    dummy_wrapper(v_print(E)...);
+}
+
+int main() {
+    func<int, double, int>(1, 1.2f, 5);
+    return 0;
+}
+```
+
 ## 参考资料
 
 《深入理解C++11-新特性解析与应用》
