@@ -98,5 +98,8 @@ int main() {
 
 ![2017-08-13_16-22-18](http://oowjr8zsi.bkt.clouddn.com/2017-08-13_16-22-18.png)
 
+C++11中所有atomic原子操作的默认值为`memory_order_seq_cst`必须是顺序一致的。
+
 ## 参考资料
 [C++ 中的原子性操作](http://lib.csdn.net/article/cplusplus/21872?knId=1169)
+《深入理解C++11-新特性解析与应用》
