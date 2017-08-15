@@ -54,3 +54,9 @@ char [10]
 */
 ```
 char array 与 char pointer
+
+
+Template Parameters有三种类型：
+>* Type parameters(类型参数)；这种参数最常用 `template <typename T>`
+>* Non-type parameters(非类型参数)； `template <size_t N = 1>`
+>* Template template parameters(双重模板参数) `template <typename T, template <typename ELEM, typename ALLOC = std::alloc<ELEM>> class CONT = std::vector>`
