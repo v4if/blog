@@ -33,3 +33,13 @@ int main() {
 模板参数可以由类型、数值，类型的自动推导
 
 嵌套模板，模板类型作为模板参数
+
+模板参数可以防止`array转为pointer`的转型动作，常被称为退化
+```c++
+template <typename T>
+void decay_func(T& args) {
+    std::cout << typeid(T&).name() << std::endl;
+    std::cout << abi::__cxa_demangle(typeid(T&).name(), nullptr, nullptr, nullptr) << std::endl;
+    std::cout << sizeof(args) << std::endl;
+}
+```
