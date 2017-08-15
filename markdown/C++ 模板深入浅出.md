@@ -34,21 +34,7 @@ int main() {
 
 嵌套模板，模板类型作为模板参数
 
-模板参数可以防止`array转为pointer`的转型动作，常被称为退化
-```c++
-template <typename T>
-void avoid_decay_func(T& args) { //这里必须是引用传递
-    std::cout << typeid(T&).name() << std::endl;
-    std::cout << abi::__cxa_demangle(typeid(T&).name(), nullptr, nullptr, nullptr) << std::endl;
-    std::cout << sizeof(args) << std::endl;
-}
-int main() {
-    int type_array[10]{0};
-    avoid_decay_func(type_array);
-}
-/*
-A10_i
-int [10]
-40
-*/
-```
+function template不允许有 template template parameters
+
+arguments 实参
+paramerers 形参
