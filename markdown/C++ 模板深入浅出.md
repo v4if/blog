@@ -37,9 +37,18 @@ int main() {
 模板参数可以防止`array转为pointer`的转型动作，常被称为退化
 ```c++
 template <typename T>
-void decay_func(T& args) {
+void avoid_decay_func(T& args) {
     std::cout << typeid(T&).name() << std::endl;
     std::cout << abi::__cxa_demangle(typeid(T&).name(), nullptr, nullptr, nullptr) << std::endl;
     std::cout << sizeof(args) << std::endl;
 }
+int main() {
+    int type_array[10]{0};
+    avoid_decay_func(type_array);
+}
+/*
+A10_i
+int [10]
+40
+*/
 ```
