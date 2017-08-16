@@ -10,14 +10,15 @@ template <typename T,
         class CONT = std::deque >
 class NestTemplate{
 public:
-//    CONT<int> a;
     NestTemplate() {
         std::cout << abi::__cxa_demangle(typeid(CONT<T>).name(), nullptr, nullptr, nullptr) << std::endl;
     }
     template <typename N>
     void nest_func(N n) {
         std::cout << n << std::endl;
-    }
+    }
+private:
+    CONT<T> elem_;
 };
 
 int main() {
