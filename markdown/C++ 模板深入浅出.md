@@ -61,3 +61,30 @@ Template Parameters有三种类型：
 >* Non-type parameters(非类型参数 - 整数或枚举类型、pointer类型、reference类型)； `template <size_t N = 1>` `template <typename T, typename T::Allocator* Allocator>`
 Non-type parameters总是右值，不能取被取址，也不能被赋值
 >* Template template parameters(双重模板参数) `template <typename T, template <typename ELEM, typename ALLOC = std::alloc<ELEM>> class CONT = std::vector>`
+
+在编译器判定某给定类型T是否有member type x
+```c++
+template <typename T>
+auto contains_of(typename T::X const*) -> char {
+    return static_cast<char>(0);
+}
+template <typename T>
+auto contains_of(...) -> char*{
+    return static_cast<char*>(0);
+}
+
+#define type_has_member_type_X(T) \
+    (sizeof(contains_of<T>(0)) == 1)
+
+struct Test{
+    typedef decltype(nullptr) X;
+};
+
+int main() {
+    std::cout << type_has_member_type_X(Test) << std::endl; //1
+    return 0;
+}
+```
+此宏的功用是判别编译器实例化contains_of<T>(0)时选中第一个function template或第二个
+>* 最佳匹配：重载解析规则会优先考虑`把0转换为一个null指针`，而不考虑`把0值当做省略号(ellipsis)参数`，重载解析规则中最后才考虑是否匹配的参数形式
+>* SFINAE原则：替换失败并非错误
