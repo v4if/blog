@@ -93,7 +93,7 @@ int main() {
         
 ## 模板与设计
 >* Generic programming(泛型编程)：使用泛化参数进行编程，以便找出高效算法之最抽象表述
->* Traits(特征、类型提取)
+>* Traits(特征、类型提取)：traits来表达`与某给定主类型有所关联`的类型附加信息，相当于类型绑定特征
 >* Policy classes(策略类别)
 >* Meta-programming(超编程)
 >* Expression templates(算式模板)
