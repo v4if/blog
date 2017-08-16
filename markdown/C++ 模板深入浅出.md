@@ -90,3 +90,6 @@ int main() {
 此宏的功用是判别编译器实例化contains_of<T>(0)时选中第一个function template或第二个，编译器把算式值绑定至template parameters时
 >* 最佳匹配：重载解析规则会优先考虑`把0转换为一个null指针`，而不考虑`把0值当做省略号(ellipsis)参数`，重载解析规则中最后才考虑是否匹配的参数形式
 >* SFINAE原则：替换失败并非错误
+  
+## 参考资料
+《C++ Template 全览 - 侯捷 简体中文版》
