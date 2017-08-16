@@ -1,3 +1,12 @@
+## 模板参数
+Template Parameters有三种类型：
+>* Type parameters(类型参数)；这种参数最常用 `template <typename T>`
+>* Non-type parameters(非类型参数 - 整数或枚举类型 编译期常数、pointer类型、reference类型)； `template <size_t N = 1>` `template <typename T, typename T::Allocator* Allocator>`
+Non-type parameters总是右值，不能取被取址，也不能被赋值
+>* Template template parameters(双重模板参数) `template <typename T, template <typename ELEM, typename ALLOC = std::alloc<ELEM>> class CONT = std::vector>`
+
+## Template template parameters
+
 ```c++
 #include <iostream>
 #include <vector>
@@ -31,11 +40,10 @@ int main() {
 }
 ```
 
-模板参数可以由类型、数值，类型的自动推导
-
 嵌套模板，模板类型作为模板参数
 template template argumnets(实参)必须完全匹配其对应参数
 
+## avoid array to pointer
 模板参数可以防止`array转为pointer`的转型动作，常被称为退化
 ```c++
 template <typename T>
@@ -56,14 +64,10 @@ char [10]
 ```
 char array 与 char pointer
 
-
-Template Parameters有三种类型：
->* Type parameters(类型参数)；这种参数最常用 `template <typename T>`
->* Non-type parameters(非类型参数 - 整数或枚举类型 编译期常数、pointer类型、reference类型)； `template <size_t N = 1>` `template <typename T, typename T::Allocator* Allocator>`
-Non-type parameters总是右值，不能取被取址，也不能被赋值
->* Template template parameters(双重模板参数) `template <typename T, template <typename ELEM, typename ALLOC = std::alloc<ELEM>> class CONT = std::vector>`
+## type has member type X
 
 在编译器判定某给定类型T是否有member type x
+
 ```c++
 template <typename T>
 auto contains_of(typename T::X const*) -> char {
