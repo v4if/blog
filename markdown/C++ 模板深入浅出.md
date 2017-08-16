@@ -92,7 +92,7 @@ int main() {
 >* SFINAE原则：替换失败并非错误
         
 ## 模板与设计
->* Generic programming(泛型编程)
+>* Generic programming(泛型编程)：使用泛化参数进行编程，以便找出高效算法之最抽象表述
 >* Traits(特征、类型提取)
 >* Policy classes(策略类别)
 >* Meta-programming(超编程)
