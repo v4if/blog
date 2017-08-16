@@ -58,5 +58,5 @@ char array 与 char pointer
 
 Template Parameters有三种类型：
 >* Type parameters(类型参数)；这种参数最常用 `template <typename T>`
->* Non-type parameters(非类型参数)； `template <size_t N = 1>`
+>* Non-type parameters(非类型参数 - 整数或枚举类型、pointer类型、reference类型)； `template <size_t N = 1>` `template <typename T, typename T::Allocator* Allocator>`
 >* Template template parameters(双重模板参数) `template <typename T, template <typename ELEM, typename ALLOC = std::alloc<ELEM>> class CONT = std::vector>`
