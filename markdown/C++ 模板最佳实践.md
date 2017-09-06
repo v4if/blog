@@ -5,6 +5,8 @@ Template Parameters有三种类型：
 Non-type parameters总是右值，不能取被取址，也不能被赋值
 >* Template template parameters(双重模板参数) `template <typename T, template <typename ELEM, typename ALLOC = std::alloc<ELEM>> class CONT = std::vector>`
 
+Template引入的“双阶段名称查找（Two phase name lookup）”堪称是C++中最黑暗的角落，模板定义和模板实例化
+
 ## Template template parameters
 
 ```c++
