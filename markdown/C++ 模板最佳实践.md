@@ -7,6 +7,8 @@ Non-type parameters总是右值，不能取被取址，也不能被赋值
 
 Template引入的“双阶段名称查找（Two phase name lookup）”堪称是C++中最黑暗的角落，名称查找会在模板定义和实例化时各做一次，分别处理非依赖性名称和依赖性名称的查找。
 
+实例化模板匹配的时候，`通过原型得到模板实参类型，然后计算偏特化和全特化形式的匹配，如果无法匹配则使用原型`
+
 ## Template template parameters
 
 ```c++
