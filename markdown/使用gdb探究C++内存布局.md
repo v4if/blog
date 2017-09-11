@@ -279,3 +279,7 @@ A::_ZTV1A: 4u entries
 8     (int (*)(...))A::foo
 12    (int (*)(...))A::bar
 ```
+
+## 参考资料
+[C++内存模型 （一）多态与继承](https://zhuanlan.zhihu.com/p/29215956)
+[图说C++对象模型：对象内存布局详解](http://www.cnblogs.com/QG-whz/p/4909359.html)
