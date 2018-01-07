@@ -15,7 +15,8 @@
 
 [以前的一些旧文章](https://v4if.github.io/archives/)
 
-[以前旧文章的markdown版本](https://github.com/v4if/blog/tree/master/markdown)
+[以前旧文章的一部分markdown版本](https://github.com/v4if/blog/tree/master/markdown)
+（文件丢失后只对一部分文章进行了从网页到markdown的转换）
 
 ### GitHub Emoji
 [Emoji](https://www.webpagefx.com/tools/emoji-cheat-sheet/)
