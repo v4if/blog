@@ -1,7 +1,7 @@
 ![happy_monkey_blog](https://raw.githubusercontent.com/v4if/blog/master/happy_monkey_blog.jpg)
 
 ## blog issues
-[issues blog](https://github.com/v4if/blog/issues)
+[所有文章 | Archives](https://github.com/v4if/blog/issues)
 ===================================
 
 
