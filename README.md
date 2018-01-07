@@ -1,10 +1,3 @@
-<style type="text/css"> 
-  div {
-    margin-left:10%;
-    margin-right:10%;
-  }
-</style> 
-
 <div align="center">
   <a href="https://github.com/v4if/blog">
   <img width="202" alt="v4if's blog" src="https://raw.githubusercontent.com/v4if/blog/master/happy_monkey_blog.jpg">
