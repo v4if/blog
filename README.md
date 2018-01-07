@@ -5,7 +5,7 @@
 
 
 ### 关于订阅
-收藏请点击 <strong>star</strong> 
+收藏请点击 <strong>star</strong> :star:
 
 订阅请点击 <strong>watch</strong>
 
