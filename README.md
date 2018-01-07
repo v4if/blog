@@ -4,11 +4,11 @@
 [所有文章 | Archives](https://github.com/v4if/blog/issues)
 
 
-<br/>
+## 关于订阅
+收藏请点击<strong>star</strong> 
 
-<div align="center">
-  <b>关于订阅：</b> 收藏请点击<strong>star</strong> && 订阅请点击<strong>watch</strong></p>
-</div>
+订阅请点击<strong>watch</strong>
+
 
 <p align="center">
 原个人博客采用的是本地Markdown写内容，然后用Hexo引擎生成静态网页，部署到GitHub Page
