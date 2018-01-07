@@ -4,7 +4,7 @@
 [所有文章 | Archives](https://github.com/v4if/blog/issues)
 
 
-## 关于订阅
+### 关于订阅
 收藏请点击 <strong>star</strong> 
 
 订阅请点击 <strong>watch</strong>
