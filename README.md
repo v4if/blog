@@ -5,9 +5,9 @@
 
 
 ### 关于订阅
-收藏请点击 <strong>star</strong> :star:
+收藏请点击 <strong>star</strong> :bell:
 
-订阅请点击 <strong>watch</strong>
+订阅请点击 <strong>watch</strong> :telescope:
 
 
 <p align="center">
