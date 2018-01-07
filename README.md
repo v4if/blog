@@ -9,14 +9,12 @@
 
 订阅请点击 <strong>watch</strong> :telescope:
 
+### 关于博客原地址
+原个人博客采用的是本地Markdown写内容，然后用Hexo引擎生成静态网页，自己扣的一个模板，部署到GitHub Page
+但是这种方式不方便，本地生成之后提交到远端，维护也比较麻烦，期间还经历过一次本地文件丢失，因此就采用了在Issues里面写一些内容
 
-<p align="center">
-原个人博客采用的是本地Markdown写内容，然后用Hexo引擎生成静态网页，部署到GitHub Page
-<a href="https://v4if.github.io/archives/"><b>一些旧文章</b></a>
-</p>
+[以前的一些旧文章](https://v4if.github.io/archives/)
+[以前旧文章的markdown版本](https://github.com/v4if/blog/tree/master/markdown)
 
---------------- 我是分割线 ---------------
-<p align="center">
-<a href="https://github.com/v4if/blog/tree/master/markdown"><b>文章的markdown版本</b></a>
-</p>
-
+### GitHub Emoji
+[Emoji](https://www.webpagefx.com/tools/emoji-cheat-sheet/)
