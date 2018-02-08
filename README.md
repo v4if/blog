@@ -23,9 +23,13 @@
 
 
 ## 工具集 
-win 终端
+win 终端  [ConEmu](https://conemu.github.io/)
 
-[ConEmu](https://conemu.github.io/)
+tldr(Too Long Don’t Read!) 比man更好用的查看指令的用法
+
+cloc(Count Lines of Code) 统计代码行数
+
+figlet 将输入字符转换成艺术字体
 
 ## Tips
 维基百科中文 `https://zh.wikipedia.org`
