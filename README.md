@@ -22,7 +22,11 @@
 [Emoji](https://www.webpagefx.com/tools/emoji-cheat-sheet/)
 
 
-## 工具集
+## 工具集 
 win 终端
 
 [ConEmu](https://conemu.github.io/)
+
+## Tips
+维基百科中文 https://zh.wikipedia.org
+bilibili视频下载 https://www.kanbilibili.com/...
