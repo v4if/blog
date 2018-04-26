@@ -35,3 +35,5 @@ figlet 将输入字符转换成艺术字体
 维基百科中文 `https://zh.wikipedia.org`
 
 bilibili视频下载 `https://www.kanbilibili.com/...`
+
+视屏下载 ` you-get `
