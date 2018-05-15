@@ -1,7 +1,8 @@
 ## plugins
 [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+
 [vscode-clang](https://marketplace.visualstudio.com/items?itemName=mitaki28.vscode-clang)
-> 使用Clang实时分析，什么模板嵌套都能分析，功能异常强大，需要指定clang路径
+·使用Clang实时分析，什么模板嵌套都能分析，功能异常强大，需要指定clang路径·
 
 ## User Settings
 ```bash
