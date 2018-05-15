@@ -3,6 +3,9 @@
 # blog issues
 [所有文章 | Archives](https://github.com/v4if/blog/issues)
 
+# common config
+[常用配置](https://github.com/v4if/blog/tree/master/commonconfig)
+
 
 ## 关于订阅
 收藏请点击 <strong>star</strong> :bell:
