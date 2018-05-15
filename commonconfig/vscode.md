@@ -15,6 +15,11 @@
     "http.proxy": "http://10.170.27.50:1080",
     "http.proxyStrictSSL": false,
     
+    # LF
+    "files.eol":"\n",
+    # 宽度超过屏幕自动换行
+    "editor.wordWrap": "on",
+    
     "clang.executable": "C:/Program Files/LLVM/bin/clang.exe",
     "clang.completion.enable": true,
     "clang.completion.triggerChars": [
