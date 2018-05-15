@@ -1,5 +1,6 @@
 ## plugins
 [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+![ms-vscode.cpptools](https://ms-vscode.gallerycdn.vsassets.io/extensions/ms-vscode/cpptools/0.17.0/1525737226765/Microsoft.VisualStudio.Services.Icons.Default)
 
 [vscode-clang](https://marketplace.visualstudio.com/items?itemName=mitaki28.vscode-clang)
 `使用Clang实时分析，什么模板嵌套都能分析，功能异常强大，需要指定clang路径`
@@ -26,6 +27,8 @@
 
 ## c_cpp_properties.json
 ```bash
+# 打开命令模式，选择[C/Cpp: Edit Configurations]
+
 {
     "configurations": [
         {
