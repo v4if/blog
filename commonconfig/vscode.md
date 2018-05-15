@@ -5,6 +5,9 @@
 [vscode-clang](https://marketplace.visualstudio.com/items?itemName=mitaki28.vscode-clang)
 `使用Clang实时分析，什么模板嵌套都能分析，功能异常强大，需要指定clang路径`
 
+[twxs.cmake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake)
+![twxs.cmake](https://twxs.gallerycdn.vsassets.io/extensions/twxs/cmake/0.0.17/1488841920286/Microsoft.VisualStudio.Services.Icons.Default)
+
 ## User Settings
 ```bash
 # 文件 -> 首选项 -> 设置
@@ -14,6 +17,8 @@
     "editor.minimap.enabled": false,
     "http.proxy": "http://10.170.27.50:1080",
     "http.proxyStrictSSL": false,
+    
+    "cmake.cmakePath": "C:/Program Files/CMake/bin",
     
     # LF
     "files.eol":"\n",
