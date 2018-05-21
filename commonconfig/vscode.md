@@ -33,7 +33,7 @@
     ">"],
     "clang.cxxflags": ["-std=c++11"],
     
-    # 关闭预览模式，
+    # 关闭预览模式，打开文件时在新选项卡而不是覆盖原来文件
     "workbench.editor.enablePreview": false,
 }
 ```
