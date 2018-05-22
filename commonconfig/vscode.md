@@ -35,6 +35,8 @@
     
     # 关闭预览模式，打开文件时在新选项卡而不是覆盖原来文件
     "workbench.editor.enablePreview": false,
+    # add new line at end of file
+    "files.insertFinalNewline": true
 }
 ```
 
