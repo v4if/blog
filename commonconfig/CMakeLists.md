@@ -34,3 +34,7 @@ target_link_libraries(async_server ${Boost_LIBRARIES} ${Protobuf_LIBRARIES})
 #set(CMAKE_CXX_FLAGS_DEBUG   "-O0" )             # 调试包不优化
 #set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG " )   # release包优化 
 ```
+
+
+## 一些有用的命令
+`cmake --help-module FindProtobuf`
