@@ -1,9 +1,9 @@
 ## plugins
 [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
-![ms-vscode.cpptools](https://ms-vscode.gallerycdn.vsassets.io/extensions/ms-vscode/cpptools/0.17.0/1525737226765/Microsoft.VisualStudio.Services.Icons.Default)
+![ms-vscode.cpptools](https://ms-vscode.gallerycdn.vsassets.io/extensions/ms-vscode/cpptools/0.17.0/1525737226765/Microsoft.VisualStudio.Services.Icons.Default) C/C++ Preview
 
 [vscode-clang](https://marketplace.visualstudio.com/items?itemName=mitaki28.vscode-clang)
-`使用Clang实时分析，什么模板嵌套都能分析，功能异常强大，需要指定clang路径，可以在c_cpp_properties.json中添加includePath`
+C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能分析，功能异常强大，需要指定clang路径，可以在c_cpp_properties.json中添加includePath`
 
 [twxs.cmake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake)
 ![twxs.cmake](https://twxs.gallerycdn.vsassets.io/extensions/twxs/cmake/0.0.17/1488841920286/Microsoft.VisualStudio.Services.Icons.Default)
