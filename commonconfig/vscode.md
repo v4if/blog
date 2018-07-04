@@ -113,11 +113,13 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 
 ## ftp-simple.json
 ```bash
+# Ctrl + Shift + P -> ftp-simple:config
+
 [
 	{
 		"name": "RemoteServer",
 		"host": "",
-		"port": 36000,
+		"port": ,
 		"type": "sftp",
 		"username": "",
 		"password": "",
