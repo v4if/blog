@@ -15,6 +15,10 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 [ftp-simple](https://marketplace.visualstudio.com/items?itemName=humy2833.ftp-simple)
 ![ftp-simple](https://humy2833.gallerycdn.vsassets.io/extensions/humy2833/ftp-simple/0.6.7/1529308303570/Microsoft.VisualStudio.Services.Icons.Default)与sftp作用相同，可配合SSHExtension使用Open SSH Connection
 
+## 快捷键
+`Ctrol + 鼠标左键` : 代码跳转
+`Alt + <-` : 回退
+
 ## User Settings
 ```bash
 # 文件 -> 首选项 -> 设置
@@ -46,7 +50,15 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
     # 关闭预览模式，打开文件时在新选项卡而不是覆盖原来文件
     "workbench.editor.enablePreview": false,
     # add new line at end of file
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+    
+    # 将cmd替换为bash
+    "terminal.integrated.shell.windows": "C:/Program Files/Git/bin/bash.exe",
+    "terminal.integrated.shellArgs.windows": [
+        "--login", "-i"
+    ],
+    # 控制资源管理器是否应在删除文件到废纸篓时进行确认
+    "explorer.confirmDelete": false
 }
 ```
 
