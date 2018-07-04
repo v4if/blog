@@ -17,6 +17,7 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 
 ## 快捷键
 `Ctrol + 鼠标左键` : 代码跳转
+
 `Alt + <-` : 回退
 
 ## User Settings
