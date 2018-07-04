@@ -12,6 +12,9 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 ![sftp](https://liximomo.gallerycdn.vsassets.io/extensions/liximomo/sftp/1.2.3/1530090897991/Microsoft.VisualStudio.Services.Icons.Default)
 开发机文件自动同步
 
+[ftp-simple](https://marketplace.visualstudio.com/items?itemName=humy2833.ftp-simple)
+![ftp-simple](https://humy2833.gallerycdn.vsassets.io/extensions/humy2833/ftp-simple/0.6.7/1529308303570/Microsoft.VisualStudio.Services.Icons.Default)与sftp作用相同，可配合SSHExtension使用Open SSH Connection
+
 ## User Settings
 ```bash
 # 文件 -> 首选项 -> 设置
@@ -108,3 +111,19 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 
 ```
 
+## ftp-simple.json
+```bash
+[
+	{
+		"name": "RemoteServer",
+		"host": "",
+		"port": 36000,
+		"type": "sftp",
+		"username": "",
+		"password": "",
+		"path": "",
+		"autosave": false,
+		"confirm": true
+	}
+]
+```
