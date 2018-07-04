@@ -8,6 +8,9 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 [twxs.cmake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake)
 ![twxs.cmake](https://twxs.gallerycdn.vsassets.io/extensions/twxs/cmake/0.0.17/1488841920286/Microsoft.VisualStudio.Services.Icons.Default) CMake
 
+[sftp](https://marketplace.visualstudio.com/items?itemName=liximomo.sftp)
+![sftp](https://liximomo.gallerycdn.vsassets.io/extensions/liximomo/sftp/1.2.3/1530090897991/Microsoft.VisualStudio.Services.Icons.Default)
+开发机文件自动同步
 
 ## User Settings
 ```bash
@@ -76,3 +79,32 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
     "version": 4
 }
 ```
+
+## sftp.json
+```bash
+# Ctrl + Shift + P -> SFTP:config
+
+{
+    "protocol": "sftp",
+    "host": "",
+    "username": "",
+    "password": "",
+    "port": ,
+    "uploadOnSave": false,
+    "downloadOnOpen": false,
+    "watcher": {
+        "files": "**/*",
+        "autoUpload": true,
+        "autoDelete": true
+    },
+    "ignore": [
+        "node_modules",
+        ".vscode",
+        ".idea",
+        ".DS_Store"
+    ],
+    "remotePath": ""
+}
+
+```
+
