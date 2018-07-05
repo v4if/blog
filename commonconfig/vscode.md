@@ -15,6 +15,9 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 [ftp-simple](https://marketplace.visualstudio.com/items?itemName=humy2833.ftp-simple)
 ![ftp-simple](https://humy2833.gallerycdn.vsassets.io/extensions/humy2833/ftp-simple/0.6.7/1529308303570/Microsoft.VisualStudio.Services.Icons.Default)与sftp作用相同，可配合SSHExtension使用Open SSH Connection
 
+[SSHExtension](https://marketplace.visualstudio.com/items?itemName=kondratiev.sshextension)
+![SSHExtension](https://kondratiev.gallerycdn.vsassets.io/extensions/kondratiev/sshextension/0.2.1/1512571641774/Microsoft.VisualStudio.Services.Icons.Default) Open SSH Connection
+
 ## 快捷键
 `Ctrol + 鼠标左键` : 代码跳转
 
