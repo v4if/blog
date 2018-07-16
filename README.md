@@ -34,6 +34,8 @@ cloc(Count Lines of Code) 统计代码行数
 
 figlet 将输入字符转换成艺术字体
 
+[wsl-terminal](https://github.com/goreliu/wsl-terminal)
+
 ## Tips
 维基百科中文 `https://zh.wikipedia.org`
 
