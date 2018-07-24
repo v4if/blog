@@ -30,7 +30,7 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 {
     "window.zoomLevel": 0,
     "editor.minimap.enabled": false,
-    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "editor.fontFamily": "'YaHei Monaco Hybird', Consolas, 'Courier New', monospace",
     "editor.fontSize": 18,
     
     "http.proxy": "http://10.170.27.50:1080",
