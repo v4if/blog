@@ -1,0 +1,5 @@
+ZSH_THEME="robbyrussell"
+
+PS1="%(?:%{$fg_bold[green]%}%?-> :%{$fg_bold[red]%}%?-> %s)%{$fg_bold[green]%}%T %{$fg[yellow]%}%n%{$fg[white]%}@%M %{$fg[cyan]%}%/"$'\n'"%# %{$reset_color%}"
+
+export LC_CTYPE="en_US.utf-8"
