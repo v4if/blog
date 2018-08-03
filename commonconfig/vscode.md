@@ -18,6 +18,8 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
 [SSHExtension](https://marketplace.visualstudio.com/items?itemName=kondratiev.sshextension)
 ![SSHExtension](https://kondratiev.gallerycdn.vsassets.io/extensions/kondratiev/sshextension/0.2.1/1512571641774/Microsoft.VisualStudio.Services.Icons.Default) Open SSH Connection
 
+[Diff Tool](https://marketplace.visualstudio.com/items?itemName=jinsihou.diff-tool)
+
 ## 快捷键
 `Ctrol + 鼠标左键` : 代码跳转
 
