@@ -122,7 +122,8 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
         "node_modules",
         ".vscode",
         ".idea",
-        ".DS_Store"
+        ".DS_Store",
+	".git"
     ],
     "remotePath": ""
 }
