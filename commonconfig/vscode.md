@@ -58,6 +58,9 @@ C/C++ Clang Command Adapter `使用Clang实时分析，什么模板嵌套都能�
     # add new line at end of file
     "files.insertFinalNewline": true,
     
+    "terminal.integrated.fontSize": 18,
+    "terminal.integrated.fontFamily": "YaHei Monaco Hybird",
+    
     # 将cmd替换为bash
     "terminal.integrated.shell.windows": "C:/Program Files/Git/bin/bash.exe",
     "terminal.integrated.shellArgs.windows": [
