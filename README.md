@@ -1,7 +1,7 @@
 ![happy_monkey_blog](https://raw.githubusercontent.com/v4if/blog/master/happy_monkey_blog.jpg)
 
-# 静态部署地址
-[pbdq](https://pbdq.github.io)
+## 静态部署地址 pbdq
+[https://pbdq.github.io](https://pbdq.github.io)
 
 # blog issues
 [所有文章 | Archives](https://github.com/v4if/blog/issues)
