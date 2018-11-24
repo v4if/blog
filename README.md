@@ -39,6 +39,10 @@ figlet 将输入字符转换成艺术字体
 
 [wsl-terminal](https://github.com/goreliu/wsl-terminal)
 
+[Chocolatey](https://chocolatey.org/) Widnows的包管理器
+
+[Everything](https://www.voidtools.com/) Windows 文件搜索软件
+
 ## Tips
 维基百科中文 `https://zh.wikipedia.org`
 
