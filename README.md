@@ -51,3 +51,5 @@ bilibili视频下载 `https://www.kanbilibili.com/...`
 视屏下载 ` you-get `
 
 Google Play Apk 下载 `https://apps.evozi.com/apk-downloader/`
+
+字体 monaco 'Operator Mono Book'
