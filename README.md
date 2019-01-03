@@ -39,8 +39,6 @@ figlet 将输入字符转换成艺术字体
 
 [wsl-terminal](https://github.com/goreliu/wsl-terminal)
 
-scp -6 osis@\[2001:db8:0:1\]:/home/osis/test.file ./test.file
-
 [Chocolatey](https://chocolatey.org/) Widnows的包管理器
 
 [Everything](https://www.voidtools.com/) Windows 文件搜索软件
@@ -55,3 +53,5 @@ bilibili视频下载 `https://www.kanbilibili.com/...`
 Google Play Apk 下载 `https://apps.evozi.com/apk-downloader/`
 
 字体 monaco 'Operator Mono Book'
+
+`scp -6 osis@\[2001:db8:0:1\]:/home/osis/test.file ./test.file`
