@@ -3,7 +3,7 @@
 
 
 ## 关于订阅
-更多动态更新内容请关注 [知乎主页](https://www.zhihu.com/people/jichao-wu) :tada:
+更多动态内容更新请关注 [知乎主页](https://www.zhihu.com/people/jichao-wu) :tada:
 
 ## 关于博客原地址
 原博客采用的是本地Markdown写内容，然后用Hexo引擎生成静态网页，自己手搓的一个网页模板，部署到GitHub Page，
