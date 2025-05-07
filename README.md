@@ -1,13 +1,5 @@
-![happy_monkey_blog](https://raw.githubusercontent.com/v4if/blog/master/happy_monkey_blog.jpg)
-
-## 静态部署地址 pbdq
-[https://pbdq.github.io](https://pbdq.github.io)
-
-# blog issues
+# Blog issues
 [所有文章 | Archives](https://github.com/v4if/blog/issues)
-
-# common config
-[常用配置](https://github.com/v4if/blog/tree/master/commonconfig)
 
 
 ## 关于订阅
@@ -23,35 +15,3 @@
 
 [以前旧文章的一部分markdown版本](https://github.com/v4if/blog/tree/master/markdown)
 （文件丢失后只对一部分文章进行了从网页到markdown的转换）
-
-## GitHub Emoji
-[Emoji](https://www.webpagefx.com/tools/emoji-cheat-sheet/)
-
-
-## 工具集 
-win 终端  [ConEmu](https://conemu.github.io/)
-
-tldr(Too Long Don’t Read!) 比man更好用的查看指令的用法
-
-cloc(Count Lines of Code) 统计代码行数
-
-figlet 将输入字符转换成艺术字体
-
-[wsl-terminal](https://github.com/goreliu/wsl-terminal)
-
-[Chocolatey](https://chocolatey.org/) Widnows的包管理器
-
-[Everything](https://www.voidtools.com/) Windows 文件搜索软件
-
-## Tips
-维基百科中文 `https://zh.wikipedia.org`
-
-bilibili视频下载 `https://www.kanbilibili.com/...`
-
-视屏下载 ` you-get `
-
-Google Play Apk 下载 `https://apps.evozi.com/apk-downloader/`
-
-字体 monaco 'Operator Mono Book'
-
-`scp -6 osis@\[2001:db8:0:1\]:/home/osis/test.file ./test.file`
